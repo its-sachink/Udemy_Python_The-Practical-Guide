@@ -16,13 +16,6 @@ participants = {'Max'}
 def hash_block(block):
     return '-'.join([str(block[key]) for key in block])
 
-
-def get_balance(participant):
-    tx_sender = [[tx['amount'] for tx in block['transactions'] if tx['sender'] == participant] for block in blockchain]
-    open_tx_sender = [tx['amount'] for tx in open_transactions if tx['sender'] == participant]
-    tx_sender.append(open_tx_sender)
-    amount_sent = 0
-    for tx in tx_sender:
 """
 illustration purpose tx_sender
 list_of_list = [ [1,2,3,4], [6,7,8,9] [10,11,12,13] [14,15,16,17]]
@@ -30,6 +23,12 @@ nums = [ [num for num in items if num%2 == 0]for items in list_of_list ]
 nums
 [[2, 4], [6, 8], [10, 12], [14, 16]]
 """
+def get_balance(participant):
+    tx_sender = [[tx['amount'] for tx in block['transactions'] if tx['sender'] == participant] for block in blockchain]
+    open_tx_sender = [tx['amount'] for tx in open_transactions if tx['sender'] == participant]
+    tx_sender.append(open_tx_sender)
+    amount_sent = 0
+    for tx in tx_sender:
         if len(tx) > 0:
             amount_sent += tx[0]
     tx_recipient = [[tx['amount'] for tx in block['transactions'] if tx['recipient'] == participant] for block in blockchain]
