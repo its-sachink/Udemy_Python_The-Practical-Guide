@@ -30,10 +30,12 @@ open_transactions = []
 owner = 'Sachin'
 participants = {owner}
 
+
 def get_transaction_value():
     tx_recipient = input('Enter the name of a Recipient :')
     tx_amount = float(input('Enter the value of transaction :'))
     return tx_recipient, tx_amount
+
 
 '''
 illustration purpose tx_sender
@@ -44,16 +46,21 @@ nums
 Demo for below function relate to tx[0]
 '''
 
+
 def get_balance(participant):
-    tx_commited_by_sender = [[ tx['amount'] for tx in block['transactions'] if tx['sender'] == participant] for block in blockchain]
-    open_tx_by_sender = [ tx['amount'] for tx in open_transactions if tx['sender'] == participant]
+    """ We are also considering the open non-committed transactions here while calculating the sender balance
+    """
+    tx_commited_by_sender = [[tx['amount'] for tx in block['transactions'] if tx['sender'] == participant] for block in
+                             blockchain]
+    open_tx_by_sender = [tx['amount'] for tx in open_transactions if tx['sender'] == participant]
     total_send_amount = tx_commited_by_sender
     total_send_amount.append(open_tx_by_sender)
     amount_send = 0
     for tx in total_send_amount:
         if len(tx) > 0:
             amount_send += tx[0]
-    tx_recipient = [ [ tx['amount'] for tx in block['transactions'] if tx['recipient'] == participant ] for block in blockchain]
+    tx_recipient = [[tx['amount'] for tx in block['transactions'] if tx['recipient'] == participant] for block in
+                    blockchain]
     amount_recieved = 0
     for tx in tx_recipient:
         if len(tx) > 0:
@@ -64,6 +71,7 @@ def get_balance(participant):
 def verify_transaction(transaction):
     sender_balance = get_balance(transaction['sender'])
     return sender_balance > transaction['amount']
+
 
 def add_transaction(tx_recipient, tx_sender=owner, tx_amount=1.0):
     transaction = {
@@ -103,12 +111,14 @@ def mine_block():
     blockchain.append(block)
     return True
 
+
 def print_blockchain():
     for block in blockchain:
         print('Outputting the Block')
         print(block)
     else:
-        print('-'*20)
+        print('-' * 20)
+
 
 def verify_chain():
     print(blockchain)
@@ -120,9 +130,13 @@ def verify_chain():
             return False
     return True
 
+
 def get_user_choice():
     user_choice = input('Enter from the valid choice :')
     return user_choice
+
+def verify_transactions():
+    return all([verify_transaction(tx) for tx in open_transactions])
 
 """
 Add a new transaction value:
@@ -137,7 +151,7 @@ Mine a block:
     --> hash_of_block = get_hash_of_block(last_block)
         --> Get a reward
             --> commit the reward and hash_of_block
-            
+
 So basically while adding itself we are verifying, checking balance and then adding to the open_transaction chain
 While mining we are just committing the open_transaction to the global block_chain list
 """
@@ -149,13 +163,14 @@ while waiting_for_input:
     print('2: Mine a new block')
     print('3: Output the block chain')
     print('4: Output the participants')
+    print('5: Check transaction validity before finally mining the block transaction')
     print('h: Manipulate the block')
     print('q: Quit')
     user_choice = get_user_choice()
     if user_choice == '1':
         tx_data = get_transaction_value()
         recipient, amount = tx_data
-        if add_transaction(recipient,tx_amount=amount):
+        if add_transaction(recipient, tx_amount=amount):
             print('Transaction successfully Added !!')
         else:
             print('Transaction failed !!')
@@ -167,12 +182,17 @@ while waiting_for_input:
         print_blockchain()
     elif user_choice == '4':
         print(participants)
+    elif user_choice == '5':
+        if verify_transactions():
+            print('All transactions are valid')
+        else:
+            print('There are invalid transactions')
     elif user_choice == 'h':
         if len(blockchain) >= 1:
             blockchain[0] = {
                 'previous_hash': '',
                 'index': 0,
-                'transaction':[{'sender': 'Vilas', 'recipient':'Sachin', 'amount': 100.0}]
+                'transaction': [{'sender': 'Vilas', 'recipient': 'Sachin', 'amount': 100.0}]
             }
     elif user_choice == 'q':
         waiting_for_input = False
