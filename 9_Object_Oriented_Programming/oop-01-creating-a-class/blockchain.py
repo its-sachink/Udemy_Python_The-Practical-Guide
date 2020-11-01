@@ -11,7 +11,6 @@ from hash_util import hash_string_256, hash_block
 MINING_REWARD = 10
 
 # Initializing our (empty) blockchain list
-#***** We are no more using the genesis_block and handling it in the try block of load_data() function
 blockchain = []
 # Unhandled transactions
 open_transactions = []
@@ -25,7 +24,6 @@ def load_data():
     """Initialize blockchain + open transactions data from a file."""
     global blockchain
     global open_transactions
-    #**** IF a blockchain.txt file is not present or deleted, as we are opening this file in ReadOnly mode
     try:
         with open('blockchain.txt', mode='r') as f:
             # file_content = pickle.loads(f.read())
@@ -53,10 +51,6 @@ def load_data():
                     [('sender', tx['sender']), ('recipient', tx['recipient']), ('amount', tx['amount'])])
                 updated_transactions.append(updated_transaction)
             open_transactions = updated_transactions
-    #**** IF error occurs in a try block then what to do, handle this error
-    #**** Here we will initialize the genesis_block and assign it to the blockchain
-    #**** also initialize the open_transactions list, We will remove the code of initialization of genesis_block and
-    #**** blockchain from the starting of the code
     except IOError:
         # Our starting block for the blockchain
         genesis_block = {
@@ -69,7 +63,6 @@ def load_data():
         blockchain = [genesis_block]
         # Unhandled transactions
         open_transactions = []
-    # **** Execute a code, no matter error happened or not
     finally:
         print('Cleanup!')
 

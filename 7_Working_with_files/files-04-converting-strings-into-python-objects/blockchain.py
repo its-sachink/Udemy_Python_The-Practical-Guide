@@ -31,7 +31,11 @@ def load_data():
         file_content = f.readlines()
         global blockchain
         global open_transactions
+        # converting from JSON to native python object again
         blockchain = json.loads(file_content[0][:-1])
+
+        # while saving the data the transactions to the file, data is not save in the format of OrderedDict
+        # Load transaction data as a ordered Dict while loading it from the text file
         updated_blockchain = []
         for block in blockchain:
             updated_block = {
@@ -43,6 +47,8 @@ def load_data():
             }
             updated_blockchain.append(updated_block)
         blockchain = updated_blockchain
+        # while saving the data the transactions to the file, data is not save in the format of OrderedDict
+        # Load transaction data as a ordered Dict while loading it from the text file
         open_transactions = json.loads(file_content[1])
         updated_transactions = []
         for tx in open_transactions:
@@ -263,6 +269,7 @@ while waiting_for_input:
     elif user_choice == '2':
         if mine_block():
             open_transactions = []
+            ## To save empty transaction when we mine a block successfully
             save_data()
     elif user_choice == '3':
         print_blockchain_elements()

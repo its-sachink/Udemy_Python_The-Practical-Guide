@@ -3,6 +3,8 @@ import hashlib as hl
 from collections import OrderedDict
 import json
 import pickle
+# pickling is the process of converting the python data to binary data, also serialize and unserilaize data
+
 
 # Import two functions from our hash_util.py file. Omit the ".py" in the import
 from hash_util import hash_string_256, hash_block
@@ -29,6 +31,11 @@ participants = {'Max'}
 
 def load_data():
     with open('blockchain.p', mode='rb') as f:
+        #**** Load pickled data now
+        #**** picling keeps the structure of ordered dict, as we had a problem with the JSON. So we are not required
+        #**** to add the OrderedDict manually
+        #**** JSON is a text and it losses the information related to OrderedDict while for pickling it keeps the Python data information
+        #**** In later section we will use only JSON data to further work on the security/Error part
         file_content = pickle.loads(f.read())
         
         global blockchain
@@ -60,10 +67,14 @@ load_data()
 
 
 def save_data():
+    # pickling is the process of converting the python data to binary data, also serialize and unserilaize data
+    # Also the mode is now binary format, change the name to .p as a pickle file
     with open('blockchain.p', mode='wb') as f:
         # f.write(json.dumps(blockchain))
         # f.write('\n')
         # f.write(json.dumps(open_transactions))
+        # Create a object which stores all the data, we cannot add a new line here now. Thus create a dictionary and
+        # convert it to binary object
         save_data = {
             'chain': blockchain,
             'ot': open_transactions
